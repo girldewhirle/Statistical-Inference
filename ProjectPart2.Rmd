@@ -1,0 +1,35 @@
+---
+title: "Statistical Inference Analysis of Tooth Growth Data Set"
+author: "girldewhirle"
+date: "7 June 2015"
+output: html_document
+---
+
+The data set is taken from a 1946 study - "THE GROWTH OF THE ODONTOBLASTS OF THE INCISOR TOOTH AS A CRITERION OF THE VITAMIN C INTAKE OF THE GUINEA PIG" - the original paper for which can be found [here](http://jn.nutrition.org/content/33/5/491.full.pdf).
+
+It contains 60 observations (a sample of the original data set) of 3 variables:
+
+- length - length of odontoblast cells in microns
+- supp - type of supplement given to guinea pig
+- dose - amount of supplement given to guinea pig
+
+** Exploratory Analysis **
+
+Prerequists for analysis in RStudio.
+
+```{r,echo=TRUE}
+library("plyr")
+library("dplyr")
+library("tidyr")
+library("ggplot2")
+```
+
+Plotting graphs of length of tooth split by type of supplement.
+
+```{r,echo=TRUE}
+## create plot object
+tooth_object<-ggplot(ToothGrowth,aes(x=dose,y=len))
+## create plot
+tooth_object + geom_point(aes(colour=supp)) + facet_grid(.~supp) + xlab("Dose of Supplement") + ylab("Length of Odontoblast") + ggtitle("Plot of dose of supplement against length, split by supplement")
+```
+

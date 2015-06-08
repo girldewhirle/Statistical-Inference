@@ -1,0 +1,61 @@
+---
+title: "SimulationProject"
+author: "girldewhirle"
+date: "7 June 2015"
+output: html_document
+---
+
+Title (give an appropriate title) and Author Name
+
+Overview: In a few (2-3) sentences explain what is going to be reported on.
+
+Prerequists for analysis in RStudio.
+
+```{r,echo=FALSE}
+suppressWarnings(library("plyr"))
+suppressWarnings(library("dplyr"))
+suppressWarnings(("tidyr"))
+suppressWarnings(library("ggplot2"))
+```
+
+## Simulations ##
+
+Simulations: Include English explanations of the simulations you ran, with the accompanying R code. Your explanations should make clear what the R code accomplishes.
+
+Lamda = 0.2.  Theoretical Mean = 1/lamda = 1/0.2 = 5
+
+Simulation 1000 times sampling the mean of 40 random exponential i.e. the mean of 40 random exponentials is calculated 1000 times and the distribution of these 1000 simulations is used for analysis.
+
+```{r,echo=TRUE}
+## create starting point for simulation which will be the data used to create the plot
+plotvalue = NULL
+lambda = 0.2
+
+## plot sample exponential - like the one the mean will be taken from
+hist(rexp(40,lambda))
+# 1000 times, create a random exponential distribution and find the median.  Concatenate this into the plotvalue
+for (i in 1 : 1000) plotvalue = c(plotvalue, mean(rexp(40,lambda)))
+## base plot the distribution
+hist(plotvalue)
+
+## ggplot distribution
+sim<-qplot(plotvalue,geom="blank")
+## print histogram
+sim<-sim + geom_histogram(aes(y=..density..),alpha=0.5)
+sim + geom_density(aes(colour="red"))
+
+## sample mean
+sample_mean<-mean(plotvalue)
+
+## mean of exponential - theoretical mean
+mean_of_exp<-1/lambda
+
+```
+
+
+
+Sample Mean versus Theoretical Mean: Include figures with titles. In the figures, highlight the means you are comparing. Include text that explains the figures and what is shown on them, and provides appropriate numbers.
+
+Sample Variance versus Theoretical Variance: Include figures (output from R) with titles. Highlight the variances you are comparing. Include text that explains your understanding of the differences of the variances.
+
+Distribution: Via figures and text, explain how one can tell the distribution is approximately normal.
