@@ -5,9 +5,93 @@ date: "6 July 2015"
 output: html_document
 ---
 
-Title (give an appropriate title) and Author Name
-Overview: In a few (2-3) sentences explain what is going to be reported on.
-Simulations: Include English explanations of the simulations you ran, with the accompanying R code. Your explanations should make clear what the R code accomplishes.
+Overview:
+
+Simulation and analysis to demonstrate the Central Limit Theorem.
+
+**Simulations**
+
+In all simulations lambda = 0.2.
+
+```{r,echo=TRUE}
+lambda=0.2
+```
+
+An exponential distribution looks like this (n is much greater than 40 to more clearly see the pattern:
+
+```{r,echo=TRUE}
+hist(rexp(100000,lambda))
+```
+
+Central Limit Theorem is a statistical theory that the distribution of the means of IID (Independent and Identically Distributed) variables approaches a normal distribution for large sample sizes.
+
+In the context of this exercise the means of 1000 exponential distribution samples (with a sample size of 40) will be simulated.  On the basis of CLT we can predict that:
+
+1) the mean of the distribution (of sample means) will approximate the theoretical mean of the exponential distribution (1/lambda)
+
+```{r,echo=TRUE}
+## mean of exponential is 1/lambda
+meanexp<-1/lambda
+## STANDARD DEVIATION of exponential is 1/lambda
+sdexp<-1/lambda
+
+## expected mean of distribution
+## now taking 1000 means from 1000 samples
+## expect mean to be close to population mean therefore
+expectedmean<-meanexp
+```
+
+2) the variance of the distribution (of sample means) will approximate the theoretical variance of the exponential distribution (1/lambda)^2/n (in this instance n=40)
+
+```{r,echo=TRUE}
+## STANDARD DEVIATION of exponential distribution is 1/lambda
+sdexp<-1/lambda
+## variance of exponential square of sdexp
+varexp<-sdexp^2
+## expected variance of distribution of mean of samples
+expectedvariance<-25/40
+
+```
+
+3) the distribution (of sample means) is close to a normal distribution
+
+```{r,echo=TRUE}
+## sample normal distribution
+hist(rnorm(1000))
+```
+
+Running simulation of a sample of 40 values from an exponential distribution 1000 times
+```{r,echo=TRUE}
+## run exp simulation 1000 times and take mean
+## create variable and set to null
+expmeanvalues<-NULL
+## calculate mean of sample of 40 from exponential distribution and append to variable
+for (i in 1:1000){expmeanvalues<-c(expmeanvalues,mean(rexp(40,lambda)))}
+```
+
+Comparison of means:
+
+Expected mean is 1/lambda = 1/0.2 = 5.  Mean of distribution of sample means is:
+```{r,echo=TRUE}
+meansim<-mean(expmeanvalues)
+print(meansim)
+```
+
+Expected variance = (1/lambda)^2/40 = 5^2/40 = 25/40.  Variance of distribution of sample means is:
+```{r,echo=TRUE}
+variancesim<-var(expmeanvalues)
+print(variancesim)
+```
+
+Distribution of sample means approximates normal.
+```{r,echo=TRUE}
+library(ggplot2)
+hist(expmeanvalues)
+abline(v=meansim, col="blue")
+abline(v=meanexp,col="red")
+```
+
+
 Sample Mean versus Theoretical Mean: Include figures with titles. In the figures, highlight the means you are comparing. Include text that explains the figures and what is shown on them, and provides appropriate numbers.
 Sample Variance versus Theoretical Variance: Include figures (output from R) with titles. Highlight the variances you are comparing. Include text that explains your understanding of the differences of the variances.
 Distribution: Via figures and text, explain how one can tell the distribution is approximately normal.
