@@ -77,7 +77,7 @@ meansim<-mean(expmeanvalues)
 print(meansim)
 ```
 
-Expected variance = (1/lambda)^2/40 = 5^2/40 = 25/40.  Variance of distribution of sample means is:
+Expected variance = (1/lambda)^2/40 = 5^2/40 = 25/40 = 0.625.  Variance of distribution of sample means is:
 ```{r,echo=TRUE}
 variancesim<-var(expmeanvalues)
 print(variancesim)
@@ -86,12 +86,28 @@ print(variancesim)
 Distribution of sample means approximates normal.
 ```{r,echo=TRUE}
 library(ggplot2)
-hist(expmeanvalues)
-abline(v=meansim, col="blue")
-abline(v=meanexp,col="red")
+# hist(expmeanvalues)
+# abline(v=meansim, col="blue")
+# abline(v=meanexp,col="red")
+## create dataframe so can use ggplot
+plotdata<-as.data.frame(expmeanvalues)
+## create plot object
+plot_object<-ggplot(data = plotdata,aes(x=expmeanvalues))
+## plot with histogram and density
+plot_object + 
+  # histogram
+  geom_histogram(aes(y=..density..),binwidth=.2,colour="black",fill="white") +
+  # density curve
+  geom_density(colour="red")+
+  # line of expected mean/theoretical mean
+  geom_vline(xintercept=expectedmean,colour="green",linetype="longdash") +
+  # line of actual mean of sample means
+  geom_vline(xintercept=meansim,colour="blue") + 
+  ## add annotation
+  annotate("text",x=7,y=0.45,label="Expected Mean",colour="green") +
+  ## add annotation
+  annotate("text",x=7,y=0.5,label="Mean of Sample Means",colour="blue") +
+  ## label axis
+  xlab("Means of Samples") +
+  ylab("Frequency of Value")
 ```
-
-
-Sample Mean versus Theoretical Mean: Include figures with titles. In the figures, highlight the means you are comparing. Include text that explains the figures and what is shown on them, and provides appropriate numbers.
-Sample Variance versus Theoretical Variance: Include figures (output from R) with titles. Highlight the variances you are comparing. Include text that explains your understanding of the differences of the variances.
-Distribution: Via figures and text, explain how one can tell the distribution is approximately normal.
