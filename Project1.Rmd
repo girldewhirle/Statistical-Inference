@@ -5,11 +5,9 @@ date: "6 July 2015"
 output: html_document
 ---
 
-**Overview**
+Overview:
 
-Central Limit Theorem is a statistical theory that the distribution of the means of IID (Independent and Identically Distributed) variables approaches a normal distribution for large sample sizes.
-
-The simulations and analysis below are to demonstrate the properties of Central Limit Theorem.
+Simulation and analysis to demonstrate the Central Limit Theorem.
 
 **Simulations**
 
@@ -19,24 +17,10 @@ In all simulations lambda = 0.2.
 lambda=0.2
 ```
 
-An exponential distribution looks like this (n is much greater than 40 in this plot to more clearly see the shape of the distribution:
+An exponential distribution looks like this (n is much greater than 40 to more clearly see the pattern:
 
 ```{r,echo=TRUE}
 hist(rexp(100000,lambda))
-```
-
-The plot below is of 1000 random values sampled from an exponential distribution where lambda = 0.2.
-
-```{r,echo=TRUE}
-expvalues<-NULL
-for (i in 1:1000){expvalues<-c(expvalues,rexp(1,lambda))}
-library(ggplot2)
-explotdata<-as.data.frame(expvalues)
-expobject<-ggplot(data = explotdata,aes(x=expvalues))
-plotofexpons<-expobject +
-  geom_histogram(aes(y=..density..),binwidth=.2,colour="black",fill="white")+
-  geom_density(colour="green")
-plotofexpons
 ```
 
 Central Limit Theorem is a statistical theory that the distribution of the means of IID (Independent and Identically Distributed) variables approaches a normal distribution for large sample sizes.
@@ -57,7 +41,7 @@ sdexp<-1/lambda
 expectedmean<-meanexp
 ```
 
-2) the variance of the distribution (of sample means) will approximate the theoretical variance of a sample of 40 from the exponential distribution (1/lambda)^2/n (in this instance n=40)
+2) the variance of the distribution (of sample means) will approximate the theoretical variance of the exponential distribution (1/lambda)^2/n (in this instance n=40)
 
 ```{r,echo=TRUE}
 ## STANDARD DEVIATION of exponential distribution is 1/lambda
@@ -100,10 +84,6 @@ print(variancesim)
 ```
 
 Distribution of sample means approximates normal.
-
-The first figure below shows the distribution of 1000 means of samples of 40 from and exponential simulation, which approaches a normal distribution.  This figure also shows the theoretical mean and the mean of samples from the simulation.  You can see that they are very close together.
-
-The second figure shows the distribution of 1000 samples from an exponential distribution which maintains the exponential distribution shape.
 ```{r,echo=TRUE}
 library(ggplot2)
 # hist(expmeanvalues)
@@ -114,7 +94,7 @@ plotdata<-as.data.frame(expmeanvalues)
 ## create plot object
 plot_object<-ggplot(data = plotdata,aes(x=expmeanvalues))
 ## plot with histogram and density
-plotofmeans<-plot_object + 
+plot_object + 
   # histogram
   geom_histogram(aes(y=..density..),binwidth=.2,colour="black",fill="white") +
   # density curve
@@ -130,45 +110,4 @@ plotofmeans<-plot_object +
   ## label axis
   xlab("Means of Samples") +
   ylab("Frequency of Value")
-
 ```
-
-```{r,fig.cap="Figure One: Plot of 1000 Means of Samples (of 40 from exponential distribution"}
-plotofmeans
-```
-
-```{r,fig.cap="Figure Two: Plot of 1000 Exponential Values from Exponential Distribution"}
-plotofexpons
-```
-
-```{r}
-## create plot object for showing upper and lower limits
-plot_object_var<-ggplot(data = plotdata,aes(x=expmeanvalues))
-## standard deviation of simulation
-sdsim<-sqrt(variancesim)
-## standard devidation of expected variance
-sdexpected<-sqrt(expectedvariance)
-## plot with histogram and density
-plotofvar<-plot_object + 
-  # histogram
-  geom_histogram(aes(y=..density..),binwidth=.2,colour="black",fill="white") +
-  # density curve
-  geom_density(colour="red")+
-  # line of upper expected sd
-  geom_vline(xintercept=expectedmean+sdexpected,colour="purple",linetype="longdash") +
-  ## line of lower expected sd
-  geom_vline(xintercept=expectedmean-sdexpected,colour="purple",linetype="longdash") +
-  # line of upper sd simulated
-  geom_vline(xintercept=meansim+sdsim,colour="red") + 
-  # line of lower sd simulated
-  geom_vline(xintercept=meansim-sdsim,colour="red") +
-  ## add annotation
-  annotate("text",x=7,y=0.45,label="+/- 1 SD for Expected Variance of Sample",colour="purple", size = 3.0) +
-  ## add annotation
-  annotate("text",x=7,y=0.5,label="+/- 1 SD for Simulated Variance of Sample Means",colour="Red",size=3.0) +
-  ## label axis
-  xlab("Means of Samples") +
-  ylab("Frequency of Value")
-plotofvar
-```
-
