@@ -31,6 +31,12 @@ colnames(datasummary)[3]<-"Mean_Length"
 colnames(datasummary)[4]<-"SD_Length"
 
 kable(datasummary,caption="Table 1: Summary of Sample Means and Standard Deviation by Supplement and Dose",align="l")
+
+## plot of dose/supplement
+expplot<-ggplot(data = ToothGrowthv2)
+expplot + geom_boxplot(aes(x=supp,y=len)) + facet_grid(.~dose)
+expplot + geom_jitter(aes(x=dose,y=len,colour=supp)) +
+  geom_smooth(aes(x=dose,y=len,colour=supp),method=lm)
 ```
 
 ***Comparision of Tooth Growth by Supplement and Dose***
@@ -42,7 +48,27 @@ To compare the impact of type of supplement on the results a t test is carried o
 ```{r}
 VC0.5<-filter(ToothGrowthv2,supp=="VC" & dose==0.5)
 OJ0.5<-filter(ToothGrowthv2,supp=="OJ" & dose==0.5)
+
+VC1.0<-filter(ToothGrowthv2,supp=="VC" & dose==1.0)
+OJ1.0<-filter(ToothGrowthv2,supp=="OJ" & dose==1.0)
+
+VC2.0<-filter(ToothGrowthv2,supp=="VC" & dose==2.0)
+OJ2.0<-filter(ToothGrowthv2,supp=="OJ" & dose==2.0)
+
 t.test(VC0.5$len,OJ0.5$len)
+t.test(VC1.0$len,OJ1.0$len)
+t.test(VC2.0$len,OJ2.0$len)
+
+diff0.5<-mean(VC0.5$len)-mean(OJ0.5$len)
+diff1.0<-mean(VC1.0$len)-mean(OJ1.0$len)
+diff2.0<-mean(VC2.0$len)-mean(OJ2.0$len)
+```
+
+```{r,echo=TRUE}
+Twoobject<-ggplot(data = VC2.0,aes(x=len))
+Twoobject + geom_density() + geom_density(data = OJ2.0,aes(x=len)) +
+  geom_vline(xintercept=mean(VC2.0$len,colour="red")) +
+  geom_vline(xintercept=mean(OJ2.0$len,colour="green"))
 ```
 
 
